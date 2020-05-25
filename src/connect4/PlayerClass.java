@@ -1,5 +1,6 @@
 package connect4;
 
+import com.sun.org.apache.xpath.internal.XPathVisitable;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -14,8 +15,8 @@ import javax.swing.JTextField;
 final class PlayerClass implements Player
 {
 
-	ConnectFourLogger logger;
-	private Game model;
+	private final ConnectFourLogger logger;
+	private Game game;
 	private int id;
 	private int column;
 	private boolean turnbuttonFlag;
@@ -26,12 +27,11 @@ final class PlayerClass implements Player
 	private JTextArea boardArea = new JTextArea(5, 5);
 	private JTextArea logArea = new JTextArea();
 
-	PlayerClass(Game model, int id) throws NullPointerException, IllegalStateException
+	PlayerClass(ConnectFourLogger logger, Game model, int id) throws NullPointerException, IllegalStateException
 	{
-
-		this.model = model;
+		this.logger = logger;
+		this.game = model;
 		this.id = id;
-		this.model.addPlayer(this);
 		this.buttonFlag = false;
 		this.turnbuttonFlag = false;
 
@@ -128,7 +128,7 @@ final class PlayerClass implements Player
 			}
 			this.turnbuttonFlag = false;
 
-			if (model.nextMoveColumn(column, id))
+			if (game.nextMoveColumn(column, id))
 			{
 				logArea.append("You dropped coin in column " + (column + 1) + System.lineSeparator());
 				break;

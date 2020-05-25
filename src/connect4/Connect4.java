@@ -137,11 +137,14 @@ public class Connect4
 
 	public static void playGame()
 	{
-		GameLogger.getInstance().log("Game is started");
-		Game model = new Game.Builder().build();
+		ConnectFourLogger logger = GameLogger.getInstance();
+		
+		Game game = new GameBuilder()
+				.width(7)
+				.height(6)
+				.logger(logger)
+				.build();
 
-		PlayerClass player = new PlayerClass(model, 1);
-		PlayerClass player1 = new PlayerClass(model, 2);
-		model.startGame();
+		game.startGame();
 	}
 }

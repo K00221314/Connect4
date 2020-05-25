@@ -1,74 +1,31 @@
 package connect4;
 
-import java.awt.JobAttributes;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 final class Game
 {
 
-	
-	
+	private final ConnectFourLogger logger;
+
 	private int[][] board;
-	private final int HEIGHT;
-	private final int WIDTH;
-	private int WINNER;
-	private final int WIN;
+	private final int height;
+	private final int width;
+	private int playerWinner;
+	private final int win;
 	private boolean draw;
 	private final List<Player> players = new CopyOnWriteArrayList<>();
 
-	static class Builder
+	Game(ConnectFourLogger logger, int height, int width, int win)
 	{
+		this.logger = logger;
+		this.height = height;
+		this.width = width;
+		this.win = win;
 
-		private int width = 7;
-		private int height = 6;
-		private int win = 4;
+		board = new int[height][width];
 
-		Builder()
-		{
-		}
-
-		Builder width(int width)
-		{
-			if (width < 3 || width > 20)
-			{
-				throw new IllegalArgumentException();
-			}
-			return this;
-		}
-
-		Builder height(int height)
-		{
-			if (height < 3 || height > 20)
-			{
-				throw new IllegalArgumentException();
-			}
-			return this;
-		}
-
-		Builder win(int win)
-		{
-			if (win < 3 || win > 10)
-			{
-				throw new IllegalArgumentException();
-			}
-			return this;
-		}
-
-		Game build()
-		{
-			return new Game(this);
-		}
-	}
-
-	Game(Builder builder)
-	{
-		WIN = builder.win;
-		HEIGHT = builder.height;
-		WIDTH = builder.width;
-
-		board = new int[HEIGHT][WIDTH];
-		GameLogger.getInstance().log("Created Model");
+		logger.log("Created Model");
 	}
 
 	void addPlayer(Player player)
@@ -86,12 +43,17 @@ final class Game
 
 	void startGame()
 	{
+		logger.log("Game is started");
+
+		Player player1 = new PlayerClass(logger, this, 1);
+		Player player2 = new PlayerClass(logger, this, 2);
+		this.players.clear();
+		this.addPlayer(player1);
+		this.addPlayer(player2);
 
 		initializeBoard();
 		gameStarted();
 		displayBoard();
-		Player player1 = players.get(0);
-		Player player2 = players.get(1);
 
 		while (true)
 		{
@@ -128,7 +90,7 @@ final class Game
 	boolean isDraw()
 	{
 		boolean flag = true;
-		for (int i = 0; i < WIDTH; i++)
+		for (int i = 0; i < width; i++)
 		{
 			if (board[0][i] == 0)
 			{
@@ -137,7 +99,7 @@ final class Game
 		}
 		if (flag)
 		{
-			GameLogger.getInstance().log("Game is Draw");
+			logger.log("Game is Draw");
 			draw = true;
 		}
 		return flag;
@@ -158,14 +120,14 @@ final class Game
 
 	boolean nextMoveColumn(int column, int id)
 	{
-		GameLogger.getInstance().log("Player " + id + " dropped in column " + column);
+		logger.log("Player " + id + " dropped in column " + column);
 		if (column > 6 || column < 0)
 		{
-			GameLogger.getInstance().log("Wrong column value by Player " + id);
+			logger.log("Wrong column value by Player " + id);
 			return false;
 		}
 		boolean flag = false;
-		for (int i = HEIGHT - 1; i >= 0; i--)
+		for (int i = height - 1; i >= 0; i--)
 		{
 			if (board[i][column] == 0)
 			{
@@ -176,7 +138,7 @@ final class Game
 		}
 		if (!flag)
 		{
-			GameLogger.getInstance().log("No space in this column, cannot play move by Player " + id);
+			logger.log("No space in this column, cannot play move by Player " + id);
 			return false;
 		}
 		return true;
@@ -222,12 +184,12 @@ final class Game
 
 	int getWinner()
 	{
-		return WINNER;
+		return playerWinner;
 	}
 
 	boolean checkForVertical(int row, int column)
 	{
-		for (int i = 0; i < this.WIN; i++)
+		for (int i = 0; i < this.win; i++)
 		{
 			if (board[row][column] != 0 && board[row + i][column] != 0 && (board[row][column] == board[row + i][column]))
 			{
@@ -243,7 +205,7 @@ final class Game
 
 	boolean checkForHorizontal(int row, int column)
 	{
-		for (int i = 0; i < this.WIN; i++)
+		for (int i = 0; i < this.win; i++)
 		{
 			if (board[row][column] != 0 && board[row][column + i] != 0 && (board[row][column] == board[row][column + i]))
 			{
@@ -259,7 +221,7 @@ final class Game
 
 	boolean checkForDiagonalLR(int row, int column)
 	{
-		for (int i = 0; i < this.WIN; i++)
+		for (int i = 0; i < this.win; i++)
 		{
 			if (board[row][column] != 0 && board[row + i][column - i] != 0 && (board[row][column] == board[row + i][column - i]))
 			{
@@ -275,7 +237,7 @@ final class Game
 
 	boolean checkForDiagonalRL(int row, int column)
 	{
-		for (int i = 0; i < this.WIN; i++)
+		for (int i = 0; i < this.win; i++)
 		{
 			if (board[row][column] != 0 && board[row + i][column + i] != 0 && (board[row][column] == board[row + i][column + i]))
 			{
@@ -292,49 +254,49 @@ final class Game
 	boolean playerHasWon()
 	{
 
-		for (int j = 0; j < WIDTH; j++)
+		for (int j = 0; j < width; j++)
 		{
-			for (int i = 0; i < HEIGHT / 2; i++)
+			for (int i = 0; i < height / 2; i++)
 			{
 
 				if (checkForVertical(i, j))
 				{
-					WINNER = board[i][j];
+					playerWinner = board[i][j];
 					return true;
 				}
 			}
 		}
-		for (int i = 0; i < HEIGHT; i++)
+		for (int i = 0; i < height; i++)
 		{
-			for (int j = 0; j < WIDTH / 2 + 1; j++)
+			for (int j = 0; j < width / 2 + 1; j++)
 			{
 				if (checkForHorizontal(i, j))
 				{
-					WINNER = board[i][j];
+					playerWinner = board[i][j];
 					return true;
 				}
 			}
 		}
 
-		for (int i = 0; i < HEIGHT / 2; i++)
+		for (int i = 0; i < height / 2; i++)
 		{
-			for (int j = WIDTH - 1; j >= WIDTH / 2; j--)
+			for (int j = width - 1; j >= width / 2; j--)
 			{
 				if (checkForDiagonalLR(i, j))
 				{
-					WINNER = board[i][j];
+					playerWinner = board[i][j];
 					return true;
 				}
 			}
 		}
 
-		for (int i = 0; i < HEIGHT / 2; i++)
+		for (int i = 0; i < height / 2; i++)
 		{
-			for (int j = 0; j < WIDTH / 2 + 1; j++)
+			for (int j = 0; j < width / 2 + 1; j++)
 			{
 				if (checkForDiagonalRL(i, j))
 				{
-					WINNER = board[i][j];
+					playerWinner = board[i][j];
 					return true;
 				}
 			}
@@ -355,16 +317,16 @@ final class Game
 		{
 			for (Player player : players)
 			{
-				player.winner(WINNER);
+				player.winner(playerWinner);
 			}
 		}
 	}
 
 	void initializeBoard()
 	{
-		for (int i = 0; i < HEIGHT; i++)
+		for (int i = 0; i < height; i++)
 		{
-			for (int j = 0; j < WIDTH; j++)
+			for (int j = 0; j < width; j++)
 			{
 				board[i][j] = 0;
 			}
