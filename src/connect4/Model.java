@@ -3,7 +3,7 @@ package connect4;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-final class Model
+public final class Model
 {
 
 	private int[][] board;
@@ -14,18 +14,18 @@ final class Model
 	private boolean draw;
 	private final List<Player> players = new CopyOnWriteArrayList<>();
 
-	static class Builder
+	public static class Builder
 	{
 
 		private int width = 7;
 		private int height = 6;
 		private int win = 4;
 
-		Builder()
+		public Builder()
 		{
 		}
 
-		Builder width(int width)
+		public Builder width(int width)
 		{
 			if (width < 3 || width > 20)
 			{
@@ -34,7 +34,7 @@ final class Model
 			return this;
 		}
 
-		Builder height(int height)
+		public Builder height(int height)
 		{
 			if (height < 3 || height > 20)
 			{
@@ -43,7 +43,7 @@ final class Model
 			return this;
 		}
 
-		Builder win(int win)
+		public Builder win(int win)
 		{
 			if (win < 3 || win > 10)
 			{
@@ -52,7 +52,7 @@ final class Model
 			return this;
 		}
 
-		Model build()
+		public Model build()
 		{
 			return new Model(this);
 		}
@@ -68,7 +68,7 @@ final class Model
 		GameLogger.getInstance().log("Created Model");
 	}
 
-	void addPlayer(Player player)
+	public void addPlayer(Player player)
 	{
 		if (player == null)
 		{
@@ -81,7 +81,7 @@ final class Model
 		players.add(player);
 	}
 
-	void startGame()
+	public void startGame()
 	{
 
 		initializeBoard();

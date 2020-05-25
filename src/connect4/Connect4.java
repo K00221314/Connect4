@@ -140,6 +140,7 @@ public class Connect4
 		GameLogger.getInstance().log("Game is started");
 		Model model = new Model.Builder().build();
 
+	
 		PlayerClass player = new PlayerClass(model, 1);
 		PlayerClass player1 = new PlayerClass(model, 2);
 		model.addPlayer(GameLogger.getInstance());

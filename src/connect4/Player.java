@@ -4,7 +4,7 @@ package connect4;
  *
  * @author Rob
  */
-interface Player
+public interface Player
 {
 
 	void gameStarted();

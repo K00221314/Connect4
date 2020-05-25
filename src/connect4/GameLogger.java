@@ -8,11 +8,11 @@ package connect4;
  */
 import java.util.logging.Logger;
 
-final class GameLogger implements Player
+public final class GameLogger implements Player
 {
 
 	private final static Logger LOGGER = Logger.getLogger(GameLogger.class.getName());
-	private static GameLogger singleInstance;
+
 
 	String lastLog;
 
@@ -20,7 +20,9 @@ final class GameLogger implements Player
 	{
 	}
 
-	static GameLogger getInstance()
+	
+	//Lasy Loading  Singleton Patter
+	public static GameLogger getInstance()
 	{
 		if (singleInstance == null)
 		{
@@ -28,8 +30,10 @@ final class GameLogger implements Player
 		}
 		return singleInstance;
 	}
-
-	void log(String text)
+	private static GameLogger singleInstance;
+	
+	
+	public void log(String text)
 	{
 		LOGGER.info(text);
 		lastLog = text;

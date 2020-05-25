@@ -11,7 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-final class PlayerClass implements Player
+public final class PlayerClass implements Player
 {
 
 	private Model model;
@@ -25,7 +25,7 @@ final class PlayerClass implements Player
 	private JTextArea boardArea = new JTextArea(5, 5);
 	private JTextArea logArea = new JTextArea();
 
-	PlayerClass(Model model, int id) throws NullPointerException, IllegalStateException
+	public PlayerClass(Model model, int id) throws NullPointerException, IllegalStateException
 	{
 
 		this.model = model;
@@ -157,10 +157,10 @@ final class PlayerClass implements Player
 	}
 
 	@Override
-	public void winner(int winner)
+	public void winner(int playerWinner)
 	{
 
-		logArea.append("Player " + winner + " Won the game");
+		logArea.append("Player " + playerWinner + " Won the game");
 	}
 
 	@Override
