@@ -8,18 +8,13 @@ package connect4;
  */
 import java.util.logging.Logger;
 
-final class GameLogger implements Player
+final class GameLogger implements ConnectFourLogger
 {
 
-	private final static Logger LOGGER = Logger.getLogger(GameLogger.class.getName());
-	private static GameLogger singleInstance;
-
-	String lastLog;
-
-	private GameLogger()
-	{
-	}
-
+	/**
+	 * Singleton Pattern
+	 * @return 
+	 */
 	static GameLogger getInstance()
 	{
 		if (singleInstance == null)
@@ -28,11 +23,19 @@ final class GameLogger implements Player
 		}
 		return singleInstance;
 	}
+	private static GameLogger singleInstance;
 
-	void log(String text)
+
+	private final static Logger LOGGER = Logger.getLogger(GameLogger.class.getName());
+
+
+	private GameLogger()
+	{
+	}
+
+	public void log(String text)
 	{
 		LOGGER.info(text);
-		lastLog = text;
 	}
 
 	@Override
@@ -42,23 +45,9 @@ final class GameLogger implements Player
 	}
 
 	@Override
-	public void nextTurn()
+	public void displayBoard(Game game)
 	{
-	}
-
-	@Override
-	public void displayBoard(int[][] board)
-	{
-		String str = "";
-		for (int i = 0; i < board.length; i++)
-		{
-			for (int j = 0; j < board[0].length; j++)
-			{
-				str = str + board[i][j];
-			}
-			str = str + '\n';
-		}
-		LOGGER.info(str);
+		LOGGER.info(game.boardToString());
 	}
 
 	@Override
@@ -68,7 +57,7 @@ final class GameLogger implements Player
 	}
 
 	@Override
-	public void draw()
+	public void drawGame()
 	{
 		log("Game Draw");
 

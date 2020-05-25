@@ -1,11 +1,14 @@
 package connect4;
 
+import java.awt.JobAttributes;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-final class Model
+final class Game
 {
 
+	
+	
 	private int[][] board;
 	private final int HEIGHT;
 	private final int WIDTH;
@@ -52,13 +55,13 @@ final class Model
 			return this;
 		}
 
-		Model build()
+		Game build()
 		{
-			return new Model(this);
+			return new Game(this);
 		}
 	}
 
-	Model(Builder builder)
+	Game(Builder builder)
 	{
 		WIN = builder.win;
 		HEIGHT = builder.height;
@@ -95,25 +98,25 @@ final class Model
 
 			yourTurn(player1);
 			displayBoard();
-			if (checkWinner())
+			if (playerHasWon())
 			{
 				callWinner();
 				break;
 			}
-			if (checkDraw())
+			if (isDraw())
 			{
 				callWinner();
 				break;
 			}
 			yourTurn(player2);
 			displayBoard();
-			if (checkWinner())
+			if (playerHasWon())
 			{
 
 				callWinner();
 				break;
 			}
-			if (checkDraw())
+			if (isDraw())
 			{
 				callWinner();
 				break;
@@ -122,7 +125,7 @@ final class Model
 
 	}
 
-	boolean checkDraw()
+	boolean isDraw()
 	{
 		boolean flag = true;
 		for (int i = 0; i < WIDTH; i++)
@@ -183,7 +186,7 @@ final class Model
 	{
 		for (Player player : players)
 		{
-			player.displayBoard(board);
+			player.displayBoard(this);
 		}
 	}
 
@@ -195,6 +198,26 @@ final class Model
 	void setBoard(int[][] b)
 	{
 		this.board = b;
+	}
+
+	public String boardToString()
+	{
+		String textString = "";
+		for (int row = 0; row < board.length; row++)
+		{
+			textString += boardRowToString(row) + System.lineSeparator();
+		}
+		return textString.trim();
+	}
+
+	private String boardRowToString(int row)
+	{
+		String textString = "";
+		for (int column = 0; column < board[0].length; column++)
+		{
+			textString += board[row][column];
+		}
+		return textString;
 	}
 
 	int getWinner()
@@ -266,7 +289,7 @@ final class Model
 		return true;
 	}
 
-	boolean checkWinner()
+	boolean playerHasWon()
 	{
 
 		for (int j = 0; j < WIDTH; j++)
@@ -325,7 +348,7 @@ final class Model
 		{
 			for (Player player : players)
 			{
-				player.draw();
+				player.drawGame();
 			}
 		}
 		else

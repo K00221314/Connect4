@@ -14,7 +14,8 @@ import javax.swing.JTextField;
 final class PlayerClass implements Player
 {
 
-	private Model model;
+	ConnectFourLogger logger;
+	private Game model;
 	private int id;
 	private int column;
 	private boolean turnbuttonFlag;
@@ -25,7 +26,7 @@ final class PlayerClass implements Player
 	private JTextArea boardArea = new JTextArea(5, 5);
 	private JTextArea logArea = new JTextArea();
 
-	PlayerClass(Model model, int id) throws NullPointerException, IllegalStateException
+	PlayerClass(Game model, int id) throws NullPointerException, IllegalStateException
 	{
 
 		this.model = model;
@@ -59,7 +60,7 @@ final class PlayerClass implements Player
 			}
 		});
 		frame.setVisible(true);
-		GameLogger.getInstance().log("Created View for Player " + this.id);
+		logger.log("Created View for Player " + this.id);
 
 	}
 
@@ -78,12 +79,12 @@ final class PlayerClass implements Player
 				textField.setText("");
 				this.column = column - 1;
 				this.turnbuttonFlag = true;
-				GameLogger.getInstance().log("Correct Input by player " + id);
+				logger.log("Correct Input by player " + id);
 			}
 			catch (NumberFormatException e)
 			{
 				logArea.append("Wrong input \n");
-				GameLogger.getInstance().log("Wrong input by Player " + id);
+				logger.log("Wrong input by Player " + id);
 				this.buttonFlag = true;
 			}
 		}
@@ -99,7 +100,7 @@ final class PlayerClass implements Player
 	public void nextTurn()
 	{
 		logArea.append("Your Turn Enter a number between 1 to 7" + "\n");
-		GameLogger.getInstance().log("Player " + id + "'s turn");
+		logger.log("Player " + id + "'s turn");
 
 		this.buttonFlag = true;
 		while (true)
@@ -129,7 +130,7 @@ final class PlayerClass implements Player
 
 			if (model.nextMoveColumn(column, id))
 			{
-				logArea.append("You dropped coin in column " + (column + 1) + "\n");
+				logArea.append("You dropped coin in column " + (column + 1) + System.lineSeparator());
 				break;
 
 			}
@@ -142,18 +143,9 @@ final class PlayerClass implements Player
 	}
 
 	@Override
-	public void displayBoard(int[][] board)
+	public void displayBoard(Game game)
 	{
-		String string = "";
-		for (int i = 0; i < board.length; i++)
-		{
-			for (int j = 0; j < board[0].length; j++)
-			{
-				string = string + board[i][j];
-			}
-			string = string + '\n';
-		}
-		boardArea.setText(string);
+		boardArea.setText(game.boardToString());
 	}
 
 	@Override
@@ -164,7 +156,7 @@ final class PlayerClass implements Player
 	}
 
 	@Override
-	public void draw()
+	public void drawGame()
 	{
 		logArea.append("Game Draw");
 

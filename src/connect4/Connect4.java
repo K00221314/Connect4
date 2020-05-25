@@ -138,11 +138,10 @@ public class Connect4
 	public static void playGame()
 	{
 		GameLogger.getInstance().log("Game is started");
-		Model model = new Model.Builder().build();
+		Game model = new Game.Builder().build();
 
 		PlayerClass player = new PlayerClass(model, 1);
 		PlayerClass player1 = new PlayerClass(model, 2);
-		model.addPlayer(GameLogger.getInstance());
 		model.startGame();
 	}
 }

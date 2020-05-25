@@ -6,14 +6,9 @@ package connect4;
  */
 interface Player
 {
-
+	void displayBoard(Game game);
+	void drawGame();
 	void gameStarted();
-
 	void nextTurn();
-
-	void displayBoard(int[][] board);
-
 	void winner(int winner);
-
-	void draw();
 }
